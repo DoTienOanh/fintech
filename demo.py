@@ -47,10 +47,10 @@ sample = {}
 # Thông tin nhập liệu (các thông số giả định dựa trên dữ liệu ban đầu)
 sample['Customer_Age'] = st.sidebar.number_input("Tuổi khách hàng", min_value=18, max_value=100, value=30)
 sample['Gender_M'] = st.sidebar.selectbox("Giới tính", ["Nam", "Nữ"]) == "Nam"
-# Thêm thông tin về thu nhập 
-income_category = st.sidebar.selectbox("Thu nhập", [
-    "Dưới 40000$", "Từ 40000$ -> 60000$", "Từ 60000$ -> 80000$", "Từ 80000$ -> 120000$", "Khác"
-])
+# # Thêm thông tin về thu nhập 
+# income_category = st.sidebar.selectbox("Thu nhập", [
+#     "Dưới 40000$", "Từ 40000$ -> 60000$", "Từ 60000$ -> 80000$", "Từ 80000$ -> 120000$", "Khác"
+# ])
 sample['Income_Category'] = income_category
 sample['Dependent_count'] = st.sidebar.number_input("Số người phụ thuộc", min_value=0, max_value=10, value=2)
 sample['Months_on_book'] = st.sidebar.number_input("Thời gian giao dịch (tháng)", min_value=0, max_value=600, value=36)
@@ -66,9 +66,9 @@ sample['Avg_Utilization_Ratio'] = st.sidebar.number_input("Tỷ lệ sử dụng
 
 
 
-# Thêm thông tin về thay đổi số tiền giao dịch 
-change_in_trans = st.sidebar.number_input("Thay đổi số tiền giao dịch (Quý 4 so với Quý 1)", min_value=-1000000, max_value=1000000, value=0)
-sample['Total_Ct_Chng_Q4_Q1'] = change_in_trans
+# # Thêm thông tin về thay đổi số tiền giao dịch 
+# change_in_trans = st.sidebar.number_input("Thay đổi số tiền giao dịch (Quý 4 so với Quý 1)", min_value=-1000000, max_value=1000000, value=0)
+# sample['Total_Ct_Chng_Q4_Q1'] = change_in_trans
 
 # Dự đoán
 if st.sidebar.button("Dự đoán"):
