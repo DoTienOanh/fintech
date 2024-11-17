@@ -25,8 +25,8 @@ st.title("Dự đoán khả năng rời bỏ khách hàng")
 # Đường dẫn mặc định
 file_path = "BankChurners.csv"
 
-# # Tải dữ liệu
-# data = load_data(file_path)
+# Tải dữ liệu
+data = load_data(file_path)
 # st.write("Dữ liệu ban đầu:", data.head())
 
 X = data.drop(columns=['Attrition_Flag'])
