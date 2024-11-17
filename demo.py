@@ -61,22 +61,22 @@ auc_score = roc_auc_score(y_test, probabilities)
 st.sidebar.header("Thông tin khách hàng")
 sample = []
 
+
 # Mã KHÁCH HÀNG (Mã định danh duy nhất cho khách hàng)
 customer_id = st.sidebar.text_input("Mã KHÁCH HÀNG", value="")
 sample.append(customer_id)
 
 # Biến sự kiện nội bộ (Hoạt động của khách hàng)
-# Nếu tài khoản bị đóng thì 1, nếu không thì 0
 account_status = st.sidebar.selectbox("Tình trạng hoạt động", ["Đang hoạt động", "Đã đóng"])
 account_status_encoded = {"Đang hoạt động": 0, "Đã đóng": 1}
 sample.append(account_status_encoded[account_status])
+
 # Tuổi khách hàng
 age = st.sidebar.number_input("Tuổi khách hàng", min_value=18, max_value=100, value=30)
 sample.append(age)
 
 # Giới tính
 gender = st.sidebar.selectbox("Giới tính", ["Nam", "Nữ", "Khác"])
-# Mã hóa giới tính (giả định: Nam=0, Nữ=1, Khác=2)
 gender_encoded = {"Nam": 0, "Nữ": 1, "Khác": 2}
 sample.append(gender_encoded[gender])
 
@@ -120,6 +120,7 @@ card_category_encoded = {
 }
 sample.append(card_category_encoded[card_category])
 
+# Các đặc trưng số học khác
 months_relationship = st.sidebar.number_input(
     "Thời gian quan hệ với ngân hàng (tháng)", min_value=0, max_value=600, value=36
 )
@@ -178,7 +179,7 @@ sample.append(transaction_count_change)
 card_utilization = st.sidebar.number_input(
     "Tỷ lệ sử dụng thẻ trung bình (%)", min_value=0.0, max_value=100.0, value=30.0, step=0.1
 )
-
+sample.append(card_utilization)
 
 
 if st.sidebar.button("Dự đoán"):
