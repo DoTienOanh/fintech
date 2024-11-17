@@ -62,10 +62,6 @@ st.sidebar.header("Thông tin khách hàng")
 sample = []
 
 
-# Mã KHÁCH HÀNG (Mã định danh duy nhất cho khách hàng)
-customer_id = st.sidebar.text_input("Mã KHÁCH HÀNG", value="")
-sample.append(customer_id)
-
 # Biến sự kiện nội bộ (Hoạt động của khách hàng)
 account_status = st.sidebar.selectbox("Tình trạng hoạt động", ["Đang hoạt động", "Đã đóng"])
 account_status_encoded = {"Đang hoạt động": 0, "Đã đóng": 1}
@@ -182,10 +178,30 @@ card_utilization = st.sidebar.number_input(
 sample.append(card_utilization)
 
 
+# if st.sidebar.button("Dự đoán"):
+#     sample_scaled = scaler.transform([sample])
+#     prediction = model.predict(sample_scaled)[0]
+#     probability = model.predict_proba(sample_scaled)[0, 1]
+#     result = "Khách hàng rời bỏ" if prediction == 1 else "Khách hàng hiện tại"
+#     st.write(f"Kết quả dự đoán: {result}")
+#     st.write(f"Xác suất: {probability*100:.2f}%")
+
+# Đảm bảo mẫu nhập vào có đúng số lượng cột như tập huấn luyện
 if st.sidebar.button("Dự đoán"):
-    sample_scaled = scaler.transform([sample])
+    # Tạo một DataFrame từ sample với cùng số cột như trong X_train
+    sample_df = pd.DataFrame([sample], columns=X.columns)
+    
+    # Mã hóa các cột phân loại cho mẫu (giống như cách bạn mã hóa trong load_data)
+    sample_encoded = pd.get_dummies(sample_df, drop_first=True)
+    
+    # Đảm bảo rằng mẫu đã được chuẩn hóa với StandardScaler
+    sample_scaled = scaler.transform(sample_encoded)
+    
+    # Dự đoán
     prediction = model.predict(sample_scaled)[0]
     probability = model.predict_proba(sample_scaled)[0, 1]
+    
+    # Hiển thị kết quả
     result = "Khách hàng rời bỏ" if prediction == 1 else "Khách hàng hiện tại"
     st.write(f"Kết quả dự đoán: {result}")
     st.write(f"Xác suất: {probability*100:.2f}%")
