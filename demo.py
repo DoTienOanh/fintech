@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, roc_auc_score
-
+pip install -r requirements.txt
 # Đọc tệp dữ liệu
 @st.cache_data
 def load_data(file_path):
