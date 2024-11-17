@@ -73,4 +73,4 @@ if st.sidebar.button("Dự đoán"):
     probability = model.predict_proba(sample_scaled)[0, 1]
     result = "Khách hàng rời bỏ" if prediction == 1 else "Khách hàng hiện tại"
     st.write(f"Kết quả dự đoán: {result}")
-    st.write(f"Xác suất: {probability:.4f}*100")
+    st.write(f"Xác suất: {probability*100:.2f}%")
