@@ -55,8 +55,7 @@ auc_score = roc_auc_score(y_test, probabilities)
 # # Thêm tính năng dự đoán cho khách hàng mới
 # st.subheader("Dự đoán cho khách hàng mới")
 
-# Giao diện Streamlit
-st.title("Dự đoán khả năng rời bỏ khách hàng")
+
 
 # Giao diện nhập liệu
 st.sidebar.header("Thông tin khách hàng")
@@ -171,6 +170,22 @@ card_utilization = st.sidebar.number_input(
     "Tỷ lệ sử dụng thẻ trung bình (%)", min_value=0.0, max_value=100.0, value=30.0, step=0.1
 )
 sample.append(card_utilization)
+sample = []
+# Thêm giá trị các cột theo đúng thứ tự
+sample.append(card_category_encoded[card_category])
+sample.append(months_relationship)
+sample.append(num_products)
+sample.append(inactive_months)
+sample.append(contacts_12_months)
+sample.append(credit_limit)
+sample.append(revolving_balance)
+sample.append(avg_credit_open_to_buy)
+sample.append(transaction_change)
+sample.append(total_transaction_amount)
+sample.append(total_transactions)
+sample.append(transaction_count_change)
+sample.append(card_utilization)
+
 
 if st.sidebar.button("Dự đoán"):
     sample_scaled = scaler.transform([sample])
