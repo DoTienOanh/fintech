@@ -59,6 +59,16 @@ sample['Total_Trans_Amt'] = st.sidebar.number_input("Tổng giao dịch ($)", mi
 sample['Total_Trans_Ct'] = st.sidebar.number_input("Tổng số giao dịch", min_value=0, max_value=1000, value=50)
 sample['Avg_Utilization_Ratio'] = st.sidebar.number_input("Tỷ lệ sử dụng thẻ (%)", min_value=0.0, max_value=1.0, value=0.3)
 
+# Thêm thông tin về thu nhập 
+income_category = st.sidebar.selectbox("Thu nhập", [
+    "Dưới 40000$", "Từ 40000$ -> 60000$", "Từ 60000$ -> 80000$", "Từ 80000$ -> 120000$", "Khác"
+])
+sample['Income_Category'] = income_category
+
+# Thêm thông tin về thay đổi số tiền giao dịch 
+change_in_trans = st.sidebar.number_input("Thay đổi số tiền giao dịch (Quý 4 so với Quý 1)", min_value=-1000000, max_value=1000000, value=0)
+sample['Total_Ct_Chng_Q4_Q1'] = change_in_trans
+
 # Dự đoán
 if st.sidebar.button("Dự đoán"):
     try:
