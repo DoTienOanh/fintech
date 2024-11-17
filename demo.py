@@ -25,9 +25,9 @@ st.title("Dự đoán khả năng rời bỏ khách hàng")
 # Đường dẫn mặc định
 file_path = "BankChurners.csv"
 
-# Tải dữ liệu
-data = load_data(file_path)
-st.write("Dữ liệu ban đầu:", data.head())
+# # Tải dữ liệu
+# data = load_data(file_path)
+# st.write("Dữ liệu ban đầu:", data.head())
 
 X = data.drop(columns=['Attrition_Flag'])
 y = data['Attrition_Flag']
@@ -48,9 +48,9 @@ probabilities = model.predict_proba(X_test_scaled)[:, 1]
 report = classification_report(y_test, predictions, target_names=['Existing Customer', 'Attrited Customer'])
 auc_score = roc_auc_score(y_test, probabilities)
 
-st.subheader("Kết quả đánh giá mô hình")
-st.text(report)
-st.write(f"AUC: {auc_score:.4f}")
+# st.subheader("Kết quả đánh giá mô hình")
+# st.text(report)
+# st.write(f"AUC: {auc_score:.4f}")
 
 # Thêm tính năng dự đoán cho khách hàng mới
 st.subheader("Dự đoán cho khách hàng mới")
@@ -73,4 +73,4 @@ if st.sidebar.button("Dự đoán"):
     probability = model.predict_proba(sample_scaled)[0, 1]
     result = "Khách hàng rời bỏ" if prediction == 1 else "Khách hàng hiện tại"
     st.write(f"Kết quả dự đoán: {result}")
-    st.write(f"Xác suất: {probability:.4f}")
+    st.write(f"Xác suất: {probability:.4f}*100")
