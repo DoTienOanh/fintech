@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, roc_auc_score
+from xgboost import XGBClassifier
 
 # Đọc và xử lý dữ liệu
 @st.cache_data
@@ -40,7 +41,7 @@ X_test_scaled = scaler.transform(X_test)
 # model = RandomForestClassifier(random_state=42)
 # model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
 
-from xgboost import XGBClassifier
+
 model = XGBClassifier(eval_metric='logloss', random_state=42)
 model.fit(X_train_scaled, y_train)
 
