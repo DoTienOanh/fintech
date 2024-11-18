@@ -38,7 +38,10 @@ X_test_scaled = scaler.transform(X_test)
 
 # Huấn luyện mô hình
 # model = RandomForestClassifier(random_state=42)
-model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+# model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+
+from xgboost import XGBClassifier
+model = XGBClassifier(eval_metric='logloss', random_state=42)
 model.fit(X_train_scaled, y_train)
 
 # Sidebar nhập dữ liệu
