@@ -2,21 +2,25 @@ import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, roc_auc_score
 from xgboost import XGBClassifier
+from imblearn.over_sampling import SMOTE
 
 # Đọc và xử lý dữ liệu
 @st.cache_data
 def load_data(file_path):
+    # Đọc file CSV
     data = pd.read_csv(file_path)
     columns_to_drop = [
         'CLIENTNUM', 
         'Naive_Bayes_Classifier_Attrition_Flag_Card_Category_Contacts_Count_12_mon_Dependent_count_Education_Level_Months_Inactive_12_mon_1',
         'Naive_Bayes_Classifier_Attrition_Flag_Card_Category_Contacts_Count_12_mon_Dependent_count_Education_Level_Months_Inactive_12_mon_2'
     ]
+    # Loại bỏ các cột không cần thiết
     data_cleaned = data.drop(columns=columns_to_drop)
+    # Mã hóa biến 'Attrition_Flag'
     data_cleaned['Attrition_Flag'] = LabelEncoder().fit_transform(data_cleaned['Attrition_Flag'])
+    # Biến đổi các cột dạng phân loại sang dạng one-hot encoding
     data_encoded = pd.get_dummies(data_cleaned, drop_first=True)
     return data_encoded
 
@@ -31,28 +35,29 @@ data = load_data(file_path)
 X = data.drop(columns=['Attrition_Flag'])
 y = data['Attrition_Flag']
 
-# Tách dữ liệu
+# Tách dữ liệu thành tập huấn luyện và tập kiểm tra
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Áp dụng SMOTE để xử lý mất cân bằng dữ liệu
+smote = SMOTE(random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, y_train)
+
+# Chuẩn hóa dữ liệu
 scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
+X_train_scaled = scaler.fit_transform(X_train_resampled)
 X_test_scaled = scaler.transform(X_test)
 
-# Huấn luyện mô hình
-# model = RandomForestClassifier(random_state=42)
-# model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
-
-
+# Huấn luyện mô hình XGBoost
 model = XGBClassifier(eval_metric='logloss', random_state=42)
-model.fit(X_train_scaled, y_train)
+model.fit(X_train_scaled, y_train_resampled)
 
 # Sidebar nhập dữ liệu
 st.sidebar.header("Thông tin khách hàng mới")
 sample = {}
 
-# Thông tin nhập liệu (các thông số giả định dựa trên dữ liệu ban đầu)
+# Thông tin nhập liệu
 sample['Customer_Age'] = st.sidebar.number_input("Tuổi khách hàng", min_value=18, max_value=100, value=30)
 sample['Gender_M'] = st.sidebar.selectbox("Giới tính", ["Nam", "Nữ"]) == "Nam"
-# Thêm thông tin về thu nhập 
 income_category = st.sidebar.selectbox("Thu nhập", [
     "Dưới 40000$", "Từ 40000$ -> 60000$", "Từ 60000$ -> 80000$", "Từ 80000$ -> 120000$", "Khác"
 ])
@@ -68,10 +73,7 @@ sample['Avg_Open_To_Buy'] = st.sidebar.number_input("Hạn mức tín dụng m�
 sample['Total_Trans_Amt'] = st.sidebar.number_input("Tổng giao dịch ($)", min_value=0, max_value=1000000, value=20000)
 sample['Total_Trans_Ct'] = st.sidebar.number_input("Tổng số giao dịch", min_value=0, max_value=1000, value=50)
 sample['Avg_Utilization_Ratio'] = st.sidebar.number_input("Tỷ lệ sử dụng thẻ (%)", min_value=0.0, max_value=1.0, value=0.3)
-
-# Thêm thông tin về thay đổi số tiền giao dịch 
-change_in_trans = st.sidebar.number_input("Thay đổi số tiền giao dịch (Quý 4 so với Quý 1)", min_value=-1000000, max_value=1000000, value=0)
-sample['Total_Ct_Chng_Q4_Q1'] = change_in_trans
+sample['Total_Ct_Chng_Q4_Q1'] = st.sidebar.number_input("Thay đổi số tiền giao dịch (Quý 4 so với Quý 1)", min_value=-1000000, max_value=1000000, value=0)
 
 # Dự đoán
 if st.sidebar.button("Dự đoán"):
@@ -95,4 +97,3 @@ if st.sidebar.button("Dự đoán"):
         st.write(f"**Xác suất rời bỏ:** {probability * 100:.2f}%")
     except Exception as e:
         st.error(f"Lỗi trong quá trình dự đoán: {e}")
-
